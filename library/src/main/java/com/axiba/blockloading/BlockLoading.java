@@ -112,6 +112,7 @@ public class BlockLoading extends View {
         blockStepHeight = (blockMaxHeight - blockMinHeight) / STEP_NUM;
 
         blockStep = 0;
+        
     }
 
 
@@ -155,13 +156,13 @@ public class BlockLoading extends View {
         //根据当前帧数获得高度
         blockHeight = blockMinHeight + blockStep * blockStepHeight;
 
+        //获取顶点坐标
+        blockTop = (height - blockHeight) / 2;
+
         //绘制方块
         canvas.drawRoundRect(block1Left, blockTop, block1Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
         canvas.drawRoundRect(block2Left, blockTop, block2Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
         canvas.drawRoundRect(block3Left, blockTop, block3Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
-
-        //获取顶点坐标
-        blockTop = (height - blockHeight) / 2;
 
 
         if (blockStep >= STEP_NUM) {
