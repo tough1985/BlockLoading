@@ -83,7 +83,7 @@ public class BlockLoading extends View {
         blockSpace = width * 0.05f;
         blockWidth = width * 0.2f;
         blockMinHeight = blockWidth * 1.1f;
-        blockMinHeight = blockWidth * 1.5f;
+        blockMaxHeight = blockWidth * 1.5f;
 
         blockHeight = blockMinHeight;
 
