@@ -32,6 +32,13 @@ public class BlockLoading extends View {
     private static final int DEFAULT_MIN_WIDTH = 200;   //默认宽度
     private static final int DEFAULT_MIN_HEIGHT = 100;  //默认高度
 
+    private static final int BLOCK_STATE_IN = 1;       //增加
+    private static final int BLOCK_STATE_DE = 2;       //减小
+
+    private static final int STEP_NUM = 15;    //总帧数，从0开始为第一帧
+    private float blockStepHeight;  //每次变化的高度
+    private int blockStep;  //当前帧
+
     //方块的间距
     private float blockSpace;
 
@@ -49,6 +56,11 @@ public class BlockLoading extends View {
     private float block1Left;
     private float block2Left;
     private float block3Left;
+
+    //状态 增加或减小
+    private int blockState;
+
+
 
 
 
@@ -83,7 +95,7 @@ public class BlockLoading extends View {
         blockSpace = width * 0.05f;
         blockWidth = width * 0.2f;
         blockMinHeight = blockWidth * 1.1f;
-        blockMinHeight = blockWidth * 1.5f;
+        blockMaxHeight = blockWidth * 1.5f;
 
         blockHeight = blockMinHeight;
 
@@ -92,6 +104,14 @@ public class BlockLoading extends View {
         block2Left = (width - blockWidth) / 2;
         block1Left = block2Left - blockSpace - blockWidth;
         block3Left = block2Left + blockSpace + blockWidth;
+
+        //初始化方块起始状态为变大
+        blockState = BLOCK_STATE_IN;
+
+        //初始化每一帧height变化量
+        blockStepHeight = (blockMaxHeight - blockMinHeight) / STEP_NUM;
+
+        blockStep = 0;
     }
 
 
@@ -124,9 +144,36 @@ public class BlockLoading extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
+        if (blockState == BLOCK_STATE_IN) {
+            //如果是变大状态，帧数+1
+            blockStep++;
+        } else {
+            //如果是变小状态，帧数-1
+            blockStep--;
+        }
+
+        //根据当前帧数获得高度
+        blockHeight = blockMinHeight + blockStep * blockStepHeight;
+
         //绘制方块
         canvas.drawRoundRect(block1Left, blockTop, block1Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
         canvas.drawRoundRect(block2Left, blockTop, block2Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
         canvas.drawRoundRect(block3Left, blockTop, block3Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
+
+        //获取顶点坐标
+        blockTop = (height - blockHeight) / 2;
+
+
+        if (blockStep >= STEP_NUM) {
+            //如果帧数已经是最后一帧，状态改为变小状态
+            blockState = BLOCK_STATE_DE;
+        } else if(blockStep <= 0){
+            //如果帧数已经是第一帧，状态改为变大状态
+            blockState = BLOCK_STATE_IN;
+        }
+
+        //触动刷新
+        postInvalidate();
+
     }
 }
