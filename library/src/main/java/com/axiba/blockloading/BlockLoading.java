@@ -29,12 +29,18 @@ public class BlockLoading extends View {
     private int width;
     private int height;
 
+    private static final int DEFAULT_MIN_WIDTH = 200;   //默认宽度
+    private static final int DEFAULT_MIN_HEIGHT = 100;  //默认高度
+
     //方块的间距
     private float blockSpace;
 
     //方块的宽和高
     private float blockWidth;
     private float blockHeight;
+
+    private float blockMinHeight;   //最小的高度
+    private float blockMaxHeight;   //最大的高度
 
     //方块的顶坐标
     private float blockTop;
@@ -68,12 +74,18 @@ public class BlockLoading extends View {
         //设置透明度
         paint.setAlpha(100);
 
-        width = getMeasuredWidth();
-        height = getMeasuredHeight();
+        width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
 
-        blockSpace = 25;
-        blockWidth = 100;
-        blockHeight = 110;
+//        blockSpace = 25;
+//        blockWidth = 100;
+//        blockHeight = 110;
+        blockSpace = width * 0.05f;
+        blockWidth = width * 0.2f;
+        blockMinHeight = blockWidth * 1.1f;
+        blockMinHeight = blockWidth * 1.5f;
+
+        blockHeight = blockMinHeight;
 
         blockTop = (height - blockHeight) / 2;
 
@@ -87,6 +99,19 @@ public class BlockLoading extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSpecSize = MeasureSpec.getMode(heightMeasureSpec);
+
+        if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(DEFAULT_MIN_WIDTH, DEFAULT_MIN_HEIGHT);
+        } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(DEFAULT_MIN_WIDTH, heightSpecSize);
+        } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(widthSpecSize, DEFAULT_MIN_HEIGHT);
+        }
     }
 
     @Override
@@ -98,7 +123,6 @@ public class BlockLoading extends View {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
-
 
         //绘制方块
         canvas.drawRoundRect(block1Left, blockTop, block1Left + blockWidth, blockTop + blockHeight, 5, 5, paint);
