@@ -97,6 +97,8 @@ public class BlockLoading extends View {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.loading);
         //获取block_color
         blockColor = a.getColor(R.styleable.loading_block_color, defaultColor);
+
+        a.recycle();
     }
 
     //初始化参数
